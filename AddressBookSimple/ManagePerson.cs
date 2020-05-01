@@ -15,11 +15,11 @@ namespace AddressBookSimple
 {
     public partial class ManagePerson : Form, IManagePerson
     {
-        private AddressBook addressBook;
-        public ManagePerson()
+        //private AddressBook addressBook;
+        public ManagePerson(AddressBook model)
         {
             InitializeComponent();
-            var managePersonPresenter = new ManagePersonPresenter(this, new AddressBook());
+            var managePersonPresenter = new ManagePersonPresenter(this, model);
         }
 
         public string InputFirstName

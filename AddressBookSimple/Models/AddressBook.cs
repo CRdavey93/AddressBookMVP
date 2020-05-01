@@ -10,7 +10,7 @@ namespace AddressBookSimple.Models
     {
         private static List<Person> addressBookFoo;
 
-        static AddressBook()
+        public AddressBook()
         {
             addressBookFoo = new List<Person>();
         }

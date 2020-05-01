@@ -25,7 +25,7 @@ namespace AddressBookSimple.Presenters
 
         public void AddPerson(object sender, EventArgs e)
         {
-            newManageWindow = new ManagePerson();
+            newManageWindow = new ManagePerson(_addressBook);
 
             newManageWindow.ShowDialog();
 

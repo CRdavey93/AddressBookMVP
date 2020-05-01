@@ -10,12 +10,21 @@ namespace AddressBookSimple.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Address { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Zip { get; set; }
         public string PhoneNumber { get; set; }
 
-        public Person(string firstName, string lastName, string phoneNumber)
+        public Person(string firstName, string lastName, string address, string city, 
+                      string state, string zip, string phoneNumber)
         {
             FirstName = firstName;
             LastName = lastName;
+            Address = address;
+            City = city;
+            State = state;
+            Zip = zip;
             PhoneNumber = phoneNumber;
         }
     }

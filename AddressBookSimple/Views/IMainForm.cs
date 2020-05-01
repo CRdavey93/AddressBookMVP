@@ -10,9 +10,6 @@ namespace AddressBookSimple.Views
 {
     public interface IMainForm
     {
-        string InputFirstName { get; set; }
-        string InputLastName { get; set; }
-        string InputPhoneNumber { get; set; }
         List<string> ListPersons { set; }
 
         event EventHandler<EventArgs> AddPerson;

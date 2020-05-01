@@ -13,32 +13,33 @@ namespace AddressBookSimple.Presenters
     {
         private readonly IMainForm _view;
         private readonly List<Person> _persons;
-
-        public MainFormPresenter(IMainForm view)
+        private ManagePerson newManageWindow;
+        private AddressBook _addressBook;
+        public MainFormPresenter(IMainForm view, AddressBook addressBook)
         {
             _view = view;
+            _addressBook = addressBook;
             _persons = new List<Person>();
             _view.AddPerson += AddPerson;
         }
 
         public void AddPerson(object sender, EventArgs e)
         {
-            var person = new Person(_view.InputFirstName, _view.InputLastName, _view.InputPhoneNumber);
+            newManageWindow = new ManagePerson();
 
-            _view.InputFirstName = null;
-            _view.InputLastName = null;
-            _view.InputPhoneNumber = null;
+            newManageWindow.ShowDialog();
 
-            _persons.Add(person);
+            //_persons.Add(person);
 
             RefreshTable();
         }
 
         public void RefreshTable()
         {
+            
             List<string> personNames = new List<string>();
 
-            foreach (var person in _persons)
+            foreach (Person person in _addressBook.AddressBookFoo)
             {
                 personNames.Add(getFullName(person));
             }

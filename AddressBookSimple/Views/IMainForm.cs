@@ -12,6 +12,16 @@ namespace AddressBookSimple.Views
     {
         List<string> ListPersons { set; }
 
-        event EventHandler<EventArgs> AddPerson;
+        event EventHandler AddPerson;
+        event EventHandler<EditingPersonEventArgs> EditPerson;
+    }
+
+    public class EditingPersonEventArgs : EventArgs
+    {
+        public EditingPersonEventArgs(string personName)
+        {
+            PersonName = personName;
+        }
+        public string PersonName { get; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AddressBookSimple.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,19 @@ namespace AddressBookSimple.Views
         string InputState { get; set; }
         string InputZip { get; set; }
 
-        event EventHandler<EventArgs> SavePerson;
+        void CloseView();
+
+        event EventHandler<PersonEditedEventArgs> SavingPerson;
+    }
+
+    public class PersonEditedEventArgs : EventArgs
+    {
+        public PersonEditedEventArgs(bool personEditedFlag, Person personBeingEdited)
+        {
+            PersonEditedFlag = personEditedFlag;
+            PersonBeingEdited = personBeingEdited;
+        }
+        public bool PersonEditedFlag { get; }
+        public Person PersonBeingEdited { get; }
     }
 }

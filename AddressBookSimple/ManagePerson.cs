@@ -15,11 +15,31 @@ namespace AddressBookSimple
 {
     public partial class ManagePerson : Form, IManagePerson
     {
+
+        private static bool personBeingEditedFlag = false;
+        private static Person personBeingEdited = null;
+
         //private AddressBook addressBook;
         public ManagePerson(AddressBook model)
         {
             InitializeComponent();
             var managePersonPresenter = new ManagePersonPresenter(this, model);
+        }
+
+        public ManagePerson(AddressBook model, Person person)
+        {
+            InitializeComponent();
+            var managePersonPresenter = new ManagePersonPresenter(this, model);
+            personBeingEditedFlag = true;
+            personBeingEdited = person;
+
+            textBoxFirstName.Text = person.FirstName;
+            textBoxLastName.Text = person.LastName;
+            textBoxAddress.Text = person.Address;
+            textBoxCity.Text = person.City;
+            textBoxState.Text = person.State;
+            textBoxZip.Text = person.Zip;
+            textBoxPhone.Text = person.PhoneNumber;
         }
 
         public string InputFirstName
@@ -70,11 +90,15 @@ namespace AddressBookSimple
         }
 
         //Public events
-        public event EventHandler<EventArgs> SavePerson;
+        public event EventHandler<PersonEditedEventArgs> SavingPerson;
 
         private void saveButton_Click(object sender, EventArgs e)
         {
-            SavePerson?.Invoke(this, EventArgs.Empty);
+            SavingPerson?.Invoke(this, new PersonEditedEventArgs(personBeingEditedFlag, personBeingEdited));
+        }
+
+        public void CloseView()
+        {
             this.Close();
         }
     }

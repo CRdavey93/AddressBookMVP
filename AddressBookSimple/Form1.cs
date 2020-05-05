@@ -28,12 +28,19 @@ namespace AddressBookSimple
         }
 
         //Public events
-        public event EventHandler<EventArgs> AddPerson;
+        public event EventHandler AddPerson;
+        public event EventHandler<EditingPersonEventArgs> EditPerson;
 
         //fires the save person event
         private void AddButton_Click(object sender, EventArgs e)
         {
             AddPerson?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void editButton_Click(object sender, EventArgs e)
+        {
+            string personName = personsList.GetItemText(personsList.SelectedItem);
+            EditPerson?.Invoke(this, new EditingPersonEventArgs(personName));
         }
     }
 }

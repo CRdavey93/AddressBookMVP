@@ -27,5 +27,10 @@ namespace AddressBookSimple.Models
             Zip = zip;
             PhoneNumber = phoneNumber;
         }
+
+        public string getFullName(Person person)
+        {
+            return person.LastName + ", " + person.FirstName;
+        }
     }
 }

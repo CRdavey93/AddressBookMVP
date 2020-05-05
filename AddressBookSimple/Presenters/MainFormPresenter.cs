@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace AddressBookSimple.Presenters
 {
@@ -21,6 +22,7 @@ namespace AddressBookSimple.Presenters
             _addressBook = addressBook;
             _persons = new List<Person>();
             _view.AddPerson += AddPerson;
+            _view.EditPerson += EditPerson;
         }
 
         public void AddPerson(object sender, EventArgs e)
@@ -29,7 +31,23 @@ namespace AddressBookSimple.Presenters
 
             newManageWindow.ShowDialog();
 
-            //_persons.Add(person);
+
+            RefreshTable();
+        }
+
+        public void EditPerson(object sender, EditingPersonEventArgs e)
+        {
+            //Ordering the name selected for editing properly for grabbing the person information later on
+            string unorderedName = e.PersonName;
+            string[] nameArray = unorderedName.Split(',');
+            string firstName = nameArray[1].Trim();
+            string lastName = nameArray[0].Trim();
+
+            Person person = _addressBook.getPerson(firstName, lastName);
+
+            newManageWindow = new ManagePerson(_addressBook, person);
+
+            newManageWindow.ShowDialog();
 
             RefreshTable();
         }
@@ -38,18 +56,15 @@ namespace AddressBookSimple.Presenters
         {
             
             List<string> personNames = new List<string>();
+            string fullName = "";
 
-            foreach (Person person in _addressBook.AddressBookFoo)
+            foreach (Person person in _addressBook.AddressBookList)
             {
-                personNames.Add(getFullName(person));
+                fullName = person.getFullName(person);
+                personNames.Add(fullName);
             }
 
             _view.ListPersons = personNames;
-        }
-
-        public string getFullName(Person person)
-        {
-            return person.LastName + ", " + person.FirstName;
         }
     }
 }

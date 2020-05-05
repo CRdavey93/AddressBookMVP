@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace AddressBookSimple.Presenters
 {
@@ -17,15 +18,76 @@ namespace AddressBookSimple.Presenters
         {
             _view = view;
             _addressBook = addressBook;
-            _view.SavePerson += SavePerson;
+            _view.SavingPerson += SavePerson;
         }
 
-        public void SavePerson(object sender, EventArgs e)
+        public void SavePerson(object sender, PersonEditedEventArgs e)
         {
-            var person = new Person(_view.InputFirstName, _view.InputLastName, _view.InputAddress, _view.InputCity,
-                                    _view.InputState, _view.InputZip, _view.InputPhoneNumber);
+            bool personExists = false;
+            bool missingInputs = checkAddPerson();
+            bool personBeingEdited = e.PersonEditedFlag;
 
-            _addressBook.UpdateAddressBook(person);
+            if (!missingInputs)
+            {
+                if (!personBeingEdited)
+                {
+
+                    var person = new Person(_view.InputFirstName, _view.InputLastName, _view.InputAddress, _view.InputCity,
+                                            _view.InputState, _view.InputZip, _view.InputPhoneNumber);
+
+                    personExists = _addressBook.doesPersonExist(person);
+
+                    if (!personExists)
+                    {
+                        _addressBook.UpdateAddressBook(person);
+                        _view.CloseView();
+                    }
+                    else
+                    {
+                        MessageBox.Show("That Person Already Exists");
+                    }
+                }
+                else
+                {
+                    foreach (Person person in _addressBook.AddressBookList)
+                    {
+                        if(person == e.PersonBeingEdited)
+                        {
+                            person.FirstName = _view.InputFirstName;
+                            person.LastName = _view.InputLastName;
+                            person.Address = _view.InputAddress;
+                            person.City = _view.InputCity;
+                            person.State = _view.InputState;
+                            person.Zip = _view.InputZip;
+                            person.PhoneNumber = _view.InputPhoneNumber;
+
+                            _view.CloseView();
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("First and Last Name required.");
+
+            }
+        }
+
+        private bool checkAddPerson()
+        {
+            bool nullInput = false;
+
+            if (string.IsNullOrEmpty(_view.InputFirstName) || string.IsNullOrEmpty(_view.InputLastName))
+            {
+                nullInput = true;
+            }
+            else
+            {
+                nullInput = false;
+            }
+
+            return nullInput;
         }
     }
 }

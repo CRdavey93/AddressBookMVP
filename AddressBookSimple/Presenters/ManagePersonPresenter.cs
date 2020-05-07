@@ -44,7 +44,7 @@ namespace AddressBookSimple.Presenters
                     }
                     else
                     {
-                        MessageBox.Show("That Person Already Exists");
+                        MessageBox.Show("A person with that name already exists.");
                     }
                 }
                 else
@@ -53,13 +53,7 @@ namespace AddressBookSimple.Presenters
                     {
                         if(person == e.PersonBeingEdited)
                         {
-                            person.FirstName = _view.InputFirstName;
-                            person.LastName = _view.InputLastName;
-                            person.Address = _view.InputAddress;
-                            person.City = _view.InputCity;
-                            person.State = _view.InputState;
-                            person.Zip = _view.InputZip;
-                            person.PhoneNumber = _view.InputPhoneNumber;
+                            updatePersonInfo(person);
 
                             _view.CloseView();
                         }
@@ -74,6 +68,19 @@ namespace AddressBookSimple.Presenters
             }
         }
 
+        private void updatePersonInfo(Person person)
+        {
+            person.FirstName = _view.InputFirstName;
+            person.LastName = _view.InputLastName;
+            person.Address = _view.InputAddress;
+            person.City = _view.InputCity;
+            person.State = _view.InputState;
+            person.Zip = _view.InputZip;
+            person.PhoneNumber = _view.InputPhoneNumber;
+        }
+
+
+        //Helper method to check if both required inputs are included
         private bool checkAddPerson()
         {
             bool nullInput = false;

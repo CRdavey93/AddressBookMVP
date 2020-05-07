@@ -16,6 +16,9 @@ namespace AddressBookSimple.Models
         public string Zip { get; set; }
         public string PhoneNumber { get; set; }
 
+        //Parameterless constructor for XML serialization
+        private Person() { }
+
         public Person(string firstName, string lastName, string address, string city, 
                       string state, string zip, string phoneNumber)
         {

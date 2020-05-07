@@ -10,15 +10,18 @@ namespace AddressBookSimple.Models
     public class AddressBook
     {
         private static List<Person> addressBookList;
+        private static bool changesToBeSaved = false;
 
         public AddressBook()
         {
             addressBookList = new List<Person>();
+            changesToBeSaved = false;
         }
 
         public void UpdateAddressBook(Person person)
         {
             addressBookList.Add(person);
+            sortByName(addressBookList);
         }
 
         //Helper method to check if a person already exists in the address book with the given first and last name
@@ -57,6 +60,24 @@ namespace AddressBookSimple.Models
             }
 
             return personObject;
+        }
+
+        public void sortByName(List<Person> personList)
+        {
+            personList.Sort(delegate (Person x, Person y)
+            {
+                if (x.LastName == y.LastName)
+                    return x.FirstName.CompareTo(y.FirstName);
+
+                return x.LastName.CompareTo(y.LastName);
+            });
+
+        }
+
+        public void sortByZip(List<Person> personList)
+        {
+            personList.Sort((x, y) => string.Compare(x.Zip, y.Zip));
+
         }
 
         public List<Person> AddressBookList

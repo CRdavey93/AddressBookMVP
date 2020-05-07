@@ -24,6 +24,7 @@ namespace AddressBookSimple
         {
             InitializeComponent();
             var managePersonPresenter = new ManagePersonPresenter(this, model);
+            personBeingEditedFlag = false;
         }
 
         public ManagePerson(AddressBook model, Person person)

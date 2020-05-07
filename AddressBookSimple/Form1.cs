@@ -15,6 +15,7 @@ namespace AddressBookSimple
 {
     public partial class mainForm : Form, IMainForm
     {
+        string personName = "";
 
         public mainForm()
         {
@@ -30,6 +31,8 @@ namespace AddressBookSimple
         //Public events
         public event EventHandler AddPerson;
         public event EventHandler<EditingPersonEventArgs> EditPerson;
+        public event EventHandler<EditingPersonEventArgs> DeletePerson;
+        public event EventHandler SaveFileAs;
 
         //fires the save person event
         private void AddButton_Click(object sender, EventArgs e)
@@ -39,8 +42,19 @@ namespace AddressBookSimple
 
         private void editButton_Click(object sender, EventArgs e)
         {
-            string personName = personsList.GetItemText(personsList.SelectedItem);
+            personName = personsList.GetItemText(personsList.SelectedItem);
             EditPerson?.Invoke(this, new EditingPersonEventArgs(personName));
+        }
+
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            personName = personsList.GetItemText(personsList.SelectedItem);
+            DeletePerson?.Invoke(this, new EditingPersonEventArgs(personName));
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileAs?.Invoke(this, EventArgs.Empty);
         }
     }
 }

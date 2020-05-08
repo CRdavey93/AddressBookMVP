@@ -15,6 +15,9 @@ namespace AddressBookSimple.Views
         event EventHandler AddPerson;
         event EventHandler<EditingPersonEventArgs> EditPerson;
         event EventHandler<EditingPersonEventArgs> DeletePerson;
+        event EventHandler NewFile;
+        event EventHandler OpenFile;
+        event EventHandler SaveFile;
         event EventHandler SaveFileAs;
     }
 

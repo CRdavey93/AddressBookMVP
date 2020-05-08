@@ -11,11 +11,13 @@ namespace AddressBookSimple.Models
     {
         private static List<Person> addressBookList;
         private static bool changesToBeSaved = false;
+        private static string fileName;
 
         public AddressBook()
         {
             addressBookList = new List<Person>();
             changesToBeSaved = false;
+            fileName = "";
         }
 
         public void UpdateAddressBook(Person person)
@@ -83,6 +85,18 @@ namespace AddressBookSimple.Models
         public List<Person> AddressBookList
         {
             get { return addressBookList; }
+        }
+
+        public bool ChangesToBeSaved
+        {
+            get => changesToBeSaved;
+            set => changesToBeSaved = value;
+        }
+
+        public string FileName
+        {
+            get => fileName;
+            set => fileName = value;
         }
     }
 }

@@ -32,6 +32,9 @@ namespace AddressBookSimple
         public event EventHandler AddPerson;
         public event EventHandler<EditingPersonEventArgs> EditPerson;
         public event EventHandler<EditingPersonEventArgs> DeletePerson;
+        public event EventHandler NewFile;
+        public event EventHandler OpenFile;
+        public event EventHandler SaveFile;
         public event EventHandler SaveFileAs;
 
         //fires the save person event
@@ -52,9 +55,25 @@ namespace AddressBookSimple
             DeletePerson?.Invoke(this, new EditingPersonEventArgs(personName));
         }
 
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NewFile?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFile?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFile?.Invoke(this, EventArgs.Empty);
+        }
+
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileAs?.Invoke(this, EventArgs.Empty);
         }
+
     }
 }

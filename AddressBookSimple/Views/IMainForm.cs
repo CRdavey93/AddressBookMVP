@@ -19,6 +19,9 @@ namespace AddressBookSimple.Views
         event EventHandler OpenFile;
         event EventHandler SaveFile;
         event EventHandler SaveFileAs;
+        event EventHandler ExitApplication;
+        event EventHandler SortByName;
+        event EventHandler SortByZip;
     }
 
     public class EditingPersonEventArgs : EventArgs

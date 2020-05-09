@@ -40,6 +40,7 @@ namespace AddressBookSimple.Presenters
                     if (!personExists)
                     {
                         _addressBook.UpdateAddressBook(person);
+                        _addressBook.sortAddressBook();
                         _addressBook.ChangesToBeSaved = true;
                         _view.CloseView();
                     }
@@ -55,6 +56,7 @@ namespace AddressBookSimple.Presenters
                         if(person == e.PersonBeingEdited)
                         {
                             updatePersonInfo(person);
+                            _addressBook.sortAddressBook();
                             _addressBook.ChangesToBeSaved = true;
                             _view.CloseView();
                         }

@@ -11,19 +11,22 @@ namespace AddressBookSimple.Models
     {
         private static List<Person> addressBookList;
         private static bool changesToBeSaved = false;
+        private static bool sortedByName = false;
+        private static bool sortedByZip = false;
         private static string fileName;
 
         public AddressBook()
         {
             addressBookList = new List<Person>();
             changesToBeSaved = false;
+            sortedByName = true;
             fileName = "";
         }
 
         public void UpdateAddressBook(Person person)
         {
             addressBookList.Add(person);
-            sortByName(addressBookList);
+
         }
 
         //Helper method to check if a person already exists in the address book with the given first and last name
@@ -47,6 +50,14 @@ namespace AddressBookSimple.Models
             return personExists;
         }
 
+        public void sortAddressBook()
+        {
+            if (sortedByName)
+                sortByName();
+            else if (sortedByZip)
+                sortByZip();
+        }
+
         //Helper method to return person object and it's info based on given first and last name
         public Person getPerson(string firstName, string lastName)
         {
@@ -64,9 +75,9 @@ namespace AddressBookSimple.Models
             return personObject;
         }
 
-        public void sortByName(List<Person> personList)
+        public void sortByName()
         {
-            personList.Sort(delegate (Person x, Person y)
+            addressBookList.Sort(delegate (Person x, Person y)
             {
                 if (x.LastName == y.LastName)
                     return x.FirstName.CompareTo(y.FirstName);
@@ -76,9 +87,9 @@ namespace AddressBookSimple.Models
 
         }
 
-        public void sortByZip(List<Person> personList)
+        public void sortByZip()
         {
-            personList.Sort((x, y) => string.Compare(x.Zip, y.Zip));
+            addressBookList.Sort((x, y) => string.Compare(x.Zip, y.Zip));
 
         }
 
@@ -97,6 +108,18 @@ namespace AddressBookSimple.Models
         {
             get => fileName;
             set => fileName = value;
+        }
+
+        public bool SortedByName
+        {
+            get => sortedByName;
+            set => sortedByName = value;
+        }
+
+        public bool SortedByZip
+        {
+            get => sortedByZip;
+            set => sortedByZip = value;
         }
     }
 }

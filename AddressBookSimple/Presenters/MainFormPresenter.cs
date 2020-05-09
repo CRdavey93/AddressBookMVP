@@ -18,6 +18,9 @@ namespace AddressBookSimple.Presenters
         private readonly List<Person> _persons;
         private ManagePerson newManageWindow;
         private AddressBook _addressBook;
+        private static bool Continue = true;
+        private static bool Dont_Continue = false;
+
         public MainFormPresenter(IMainForm view, AddressBook addressBook)
         {
             _view = view;
@@ -31,6 +34,8 @@ namespace AddressBookSimple.Presenters
             _view.OpenFile += OpenFile;
             _view.SaveFile += SaveFile;
             _view.SaveFileAs += SaveFileAs;
+            _view.SortByName += SortByName;
+            _view.SortByZip += SortByZip;
         }
 
         public void AddPerson(object sender, EventArgs e)
@@ -76,6 +81,11 @@ namespace AddressBookSimple.Presenters
         //Event to create a new instance of AddressBook and then update the GUI List
         public void NewFile(object sender, EventArgs e)
         {
+            if (_addressBook.ChangesToBeSaved)
+            {
+                if (offerToSave() != Continue)
+                    return;
+            }
             _addressBook = new AddressBook();
             RefreshAddressBook();
         }
@@ -83,6 +93,11 @@ namespace AddressBookSimple.Presenters
         //Event to setup the open file function by starting a new dialog and getting the file to be opened
         public void OpenFile(object sender, EventArgs e)
         {
+            if (_addressBook.ChangesToBeSaved)
+            {
+                if (offerToSave() != Continue)
+                    return;
+            }
             using (OpenFileDialog openFile = new OpenFileDialog())
             {
                 openFile.Filter = "xml files |*.xml";
@@ -152,6 +167,50 @@ namespace AddressBookSimple.Presenters
                 textWriter.Close();
             }
             _addressBook.ChangesToBeSaved = false;
+        }
+
+        public bool offerToSave()
+        {
+            DialogResult dialogResult = MessageBox.Show("Changes have recently been made, would you like to save?", "Save", MessageBoxButtons.YesNoCancel);
+
+            switch (dialogResult)
+            {
+                case DialogResult.Cancel:
+                    return Dont_Continue;
+                case DialogResult.Yes:
+                    try
+                    {
+                        SaveFile(this, EventArgs.Empty);
+                        return Continue;
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+
+                    }
+                case DialogResult.No:
+                    return Continue;
+                default:
+                    return Dont_Continue;
+            }
+        }
+
+        private void SortByName(object sender, EventArgs e)
+        {
+            _addressBook.sortByName();
+            _addressBook.SortedByName = true;
+            _addressBook.SortedByZip = false;
+
+            RefreshAddressBook();
+        }
+
+        private void SortByZip(object sender, EventArgs e)
+        {
+            _addressBook.sortByZip();
+            _addressBook.SortedByZip = true;
+            _addressBook.SortedByName = false;
+
+            RefreshAddressBook();
         }
 
         //Helper method for taking the string passed from the main view and ordering it correctly while removing white space to return a usable first and last name.

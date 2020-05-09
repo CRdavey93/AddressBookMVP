@@ -36,6 +36,9 @@ namespace AddressBookSimple
         public event EventHandler OpenFile;
         public event EventHandler SaveFile;
         public event EventHandler SaveFileAs;
+        public event EventHandler ExitApplication;
+        public event EventHandler SortByName;
+        public event EventHandler SortByZip;
 
         //fires the save person event
         private void AddButton_Click(object sender, EventArgs e)
@@ -75,5 +78,19 @@ namespace AddressBookSimple
             SaveFileAs?.Invoke(this, EventArgs.Empty);
         }
 
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExitApplication?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void nameSortToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SortByName?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void zipSortToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SortByZip?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

@@ -50,6 +50,11 @@ namespace AddressBookSimple
         {
             personName = personsList.GetItemText(personsList.SelectedItem);
             EditPerson?.Invoke(this, new EditingPersonEventArgs(personName));
+
+            int index = personsList.FindStringExact(personName);
+
+            if (index != -1)
+                personsList.SetSelected(index, true);
         }
 
         private void deleteButton_Click(object sender, EventArgs e)

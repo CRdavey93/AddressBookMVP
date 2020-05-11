@@ -13,8 +13,10 @@ namespace AddressBookSimple.Views
         List<string> ListPersons { set; }
 
         event EventHandler AddPerson;
-        event EventHandler<EditingPersonEventArgs> EditPerson;
-        event EventHandler<EditingPersonEventArgs> DeletePerson;
+        event EventHandler<PersonInfoEventArgs> EditPerson;
+        event EventHandler<PersonInfoEventArgs> DeletePerson;
+        event EventHandler<PersonInfoEventArgs> ShowPersonInfo;
+
         event EventHandler NewFile;
         event EventHandler OpenFile;
         event EventHandler SaveFile;
@@ -22,14 +24,17 @@ namespace AddressBookSimple.Views
         event EventHandler ExitApplication;
         event EventHandler SortByName;
         event EventHandler SortByZip;
+
+        event EventHandler SetupTests;
     }
 
-    public class EditingPersonEventArgs : EventArgs
+    public class PersonInfoEventArgs : EventArgs
     {
-        public EditingPersonEventArgs(string personName)
+        public PersonInfoEventArgs(string personName)
         {
             PersonName = personName;
         }
         public string PersonName { get; }
     }
+
 }

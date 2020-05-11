@@ -30,8 +30,10 @@ namespace AddressBookSimple
 
         //Public events
         public event EventHandler AddPerson;
-        public event EventHandler<EditingPersonEventArgs> EditPerson;
-        public event EventHandler<EditingPersonEventArgs> DeletePerson;
+        public event EventHandler<PersonInfoEventArgs> EditPerson;
+        public event EventHandler<PersonInfoEventArgs> DeletePerson;
+        public event EventHandler<PersonInfoEventArgs> ShowPersonInfo;
+
         public event EventHandler NewFile;
         public event EventHandler OpenFile;
         public event EventHandler SaveFile;
@@ -39,6 +41,8 @@ namespace AddressBookSimple
         public event EventHandler ExitApplication;
         public event EventHandler SortByName;
         public event EventHandler SortByZip;
+
+        public event EventHandler SetupTests;
 
         //fires the save person event
         private void AddButton_Click(object sender, EventArgs e)
@@ -49,7 +53,7 @@ namespace AddressBookSimple
         private void editButton_Click(object sender, EventArgs e)
         {
             personName = personsList.GetItemText(personsList.SelectedItem);
-            EditPerson?.Invoke(this, new EditingPersonEventArgs(personName));
+            EditPerson?.Invoke(this, new PersonInfoEventArgs(personName));
 
             int index = personsList.FindStringExact(personName);
 
@@ -60,7 +64,17 @@ namespace AddressBookSimple
         private void deleteButton_Click(object sender, EventArgs e)
         {
             personName = personsList.GetItemText(personsList.SelectedItem);
-            DeletePerson?.Invoke(this, new EditingPersonEventArgs(personName));
+            DeletePerson?.Invoke(this, new PersonInfoEventArgs(personName));
+        }
+
+        private void personsList_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            int index = this.personsList.IndexFromPoint(e.Location);
+            if (index != ListBox.NoMatches)
+            {
+                personName = personsList.GetItemText(personsList.SelectedItem);
+                ShowPersonInfo?.Invoke(this, new PersonInfoEventArgs(personName));
+            }
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -96,6 +110,11 @@ namespace AddressBookSimple
         private void zipSortToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SortByZip?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void setupTest_Click(object sender, EventArgs e)
+        {
+            SetupTests?.Invoke(this, EventArgs.Empty);
         }
     }
 }

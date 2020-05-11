@@ -93,6 +93,32 @@ namespace AddressBookSimple.Models
 
         }
 
+        public void addPerson(string firstName, string lastName, string address, string city, string state, string zip, string phone)
+        {
+            addressBookList.Add(new Person(firstName, lastName, address, city, state, zip, phone));
+            changesToBeSaved = true;
+        }
+
+        public void setupTests()
+        {
+            addPerson("Anthony", "Aardvark", "10 Skunk Hollow Lane", "Wenham",
+                                 "MA", "01984", "927-2300");
+            addPerson("Zelda", "Zebra", "5 Zoo Road", "Beverly",
+                                 "MA", "01915", "927-0001");
+            addPerson("George", "Gopher", "Tunnel 37", "Hamilton",
+                                 "MA", "01936", "468-5555");
+            addPerson("Clarence", "Cat", "127 Litter Box Ln", "Ipswich",
+                                 "MA", "01938", "356-9999");
+            addPerson("Charlene", "Cat", "127 Litter Box Ln", "Ipswich",
+                                 "MA", "01938", "356-9999");
+            addPerson("Boris", "Buffalo", "Town Common", "Hamilton",
+                                 "MA", "01936", "468-5555");
+            addPerson("Bertha", "Buffalo", "14 Grassy Fields Rd", "Wenham",
+                                 "MA", "01984", "927-2300");
+            addPerson("Maxwell", "Moose", "12 You Can't Get There From Here Rd",
+                      "TAR2", "ME", "None", "None");
+        }
+
         public List<Person> AddressBookList
         {
             get { return addressBookList; }

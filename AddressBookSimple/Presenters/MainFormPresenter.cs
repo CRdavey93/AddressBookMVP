@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -30,12 +31,16 @@ namespace AddressBookSimple.Presenters
             _view.AddPerson += AddPerson;
             _view.EditPerson += EditPerson;
             _view.DeletePerson += DeletePerson;
+            _view.ShowPersonInfo += ShowPersonInfo;
+
             _view.NewFile += NewFile;
             _view.OpenFile += OpenFile;
             _view.SaveFile += SaveFile;
             _view.SaveFileAs += SaveFileAs;
             _view.SortByName += SortByName;
             _view.SortByZip += SortByZip;
+
+            _view.SetupTests += SetupTests;
         }
 
         public void AddPerson(object sender, EventArgs e)
@@ -48,7 +53,7 @@ namespace AddressBookSimple.Presenters
             RefreshAddressBook();
         }
 
-        public void EditPerson(object sender, EditingPersonEventArgs e)
+        public void EditPerson(object sender, PersonInfoEventArgs e)
         {
             if (_addressBook.AddressBookList.Any())
             {
@@ -65,7 +70,7 @@ namespace AddressBookSimple.Presenters
 
         }
 
-        public void DeletePerson(object sender, EditingPersonEventArgs e)
+        public void DeletePerson(object sender, PersonInfoEventArgs e)
         {
             if (_addressBook.AddressBookList.Any())
             {
@@ -76,6 +81,22 @@ namespace AddressBookSimple.Presenters
 
                 RefreshAddressBook();
             }
+        }
+
+        public void ShowPersonInfo(object sender, PersonInfoEventArgs e)
+        {
+            (string firstName, string lastName) = cleanUpName(e.PersonName);
+
+            Person person = _addressBook.getPerson(firstName, lastName);
+
+            string personInfo = "";
+
+            foreach (PropertyInfo prop in person.GetType().GetProperties())
+            {
+                personInfo += prop.GetValue(person) + Environment.NewLine;
+            }
+
+            MessageBox.Show("Requested Info: " + Environment.NewLine + personInfo, "Person Information", MessageBoxButtons.OK);
         }
 
         //Event to create a new instance of AddressBook and then update the GUI List
@@ -243,6 +264,12 @@ namespace AddressBookSimple.Presenters
             }
 
             _view.ListPersons = personNames;
+        }
+
+        public void SetupTests(object sender, EventArgs e)
+        {
+            _addressBook.setupTests();
+            RefreshAddressBook();
         }
     }
 }

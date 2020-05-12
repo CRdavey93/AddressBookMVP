@@ -15,7 +15,7 @@ namespace AddressBookSimple
 {
     public partial class mainForm : Form, IMainForm
     {
-        string personName = "";
+        private static string personName = "";
 
         public mainForm()
         {
@@ -26,6 +26,12 @@ namespace AddressBookSimple
         public List<string> ListPersons
         {
             set => personsList.DataSource = value;
+        }
+
+        public ListBox ListPersonsControl
+        {
+            get => personsList;
+            set => personsList = value;
         }
 
         //Public events
@@ -39,8 +45,11 @@ namespace AddressBookSimple
         public event EventHandler SaveFile;
         public event EventHandler SaveFileAs;
         public event EventHandler ExitApplication;
+
         public event EventHandler SortByName;
         public event EventHandler SortByZip;
+
+        public event EventHandler FindPerson;
 
         public event EventHandler SetupTests;
 
@@ -54,11 +63,6 @@ namespace AddressBookSimple
         {
             personName = personsList.GetItemText(personsList.SelectedItem);
             EditPerson?.Invoke(this, new PersonInfoEventArgs(personName));
-
-            int index = personsList.FindStringExact(personName);
-
-            if (index != -1)
-                personsList.SetSelected(index, true);
         }
 
         private void deleteButton_Click(object sender, EventArgs e)
@@ -115,6 +119,11 @@ namespace AddressBookSimple
         private void setupTest_Click(object sender, EventArgs e)
         {
             SetupTests?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void findToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FindPerson?.Invoke(this, EventArgs.Empty);
         }
     }
 }

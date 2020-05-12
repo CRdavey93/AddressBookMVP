@@ -5,12 +5,14 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace AddressBookSimple.Views
 {
     public interface IMainForm
     {
         List<string> ListPersons { set; }
+        ListBox ListPersonsControl { get; set; }
 
         event EventHandler AddPerson;
         event EventHandler<PersonInfoEventArgs> EditPerson;
@@ -24,6 +26,8 @@ namespace AddressBookSimple.Views
         event EventHandler ExitApplication;
         event EventHandler SortByName;
         event EventHandler SortByZip;
+
+        event EventHandler FindPerson;
 
         event EventHandler SetupTests;
     }

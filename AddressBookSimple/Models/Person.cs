@@ -31,9 +31,9 @@ namespace AddressBookSimple.Models
             PhoneNumber = phoneNumber;
         }
 
-        public string getFullName(Person person)
+        public string getFullName()
         {
-            return person.LastName + ", " + person.FirstName;
+            return LastName + ", " + FirstName;
         }
     }
 }

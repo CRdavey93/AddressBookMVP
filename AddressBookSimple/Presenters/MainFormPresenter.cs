@@ -6,6 +6,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -37,8 +38,11 @@ namespace AddressBookSimple.Presenters
             _view.OpenFile += OpenFile;
             _view.SaveFile += SaveFile;
             _view.SaveFileAs += SaveFileAs;
+
             _view.SortByName += SortByName;
             _view.SortByZip += SortByZip;
+
+            _view.FindPerson += FindPerson;
 
             _view.SetupTests += SetupTests;
         }
@@ -58,14 +62,15 @@ namespace AddressBookSimple.Presenters
             if (_addressBook.AddressBookList.Any())
             {
                 (string firstName, string lastName) = cleanUpName(e.PersonName);
-
                 Person person = _addressBook.getPerson(firstName, lastName);
 
                 newManageWindow = new ManagePerson(_addressBook, person);
-
                 newManageWindow.ShowDialog();
 
                 RefreshAddressBook();
+
+                setListFocus(person);
+
             }
 
         }
@@ -234,6 +239,11 @@ namespace AddressBookSimple.Presenters
             RefreshAddressBook();
         }
 
+        private void FindPerson(object sender, EventArgs e)
+        {
+            
+        }
+
         //Helper method for taking the string passed from the main view and ordering it correctly while removing white space to return a usable first and last name.
         public (string firstName, string lastName) cleanUpName(string personName)
         {
@@ -242,6 +252,17 @@ namespace AddressBookSimple.Presenters
             string lastName = nameArray[0].Trim();
 
             return (firstName, lastName);
+        }
+
+        //Helper method to set the focus of the list on the person we want after list update.
+        public void setListFocus(Person person)
+        {
+            var listBox = _view.ListPersonsControl;
+
+            int index = listBox.FindStringExact(person.getFullName());
+
+            if (index != -1)
+                listBox.SetSelected(index, true);
         }
 
         //Helper method to set the instance of addressBook we are using when opening a file
@@ -254,12 +275,12 @@ namespace AddressBookSimple.Presenters
         //Method to update the list of names shown on the main form
         public void RefreshAddressBook()
         {
-            List<string> personNames = new List<string>();
+            var personNames = new List<string>();
             string fullName = "";
 
             foreach (Person person in _addressBook.AddressBookList)
             {
-                fullName = person.getFullName(person);
+                fullName = person.getFullName();
                 personNames.Add(fullName);
             }
 

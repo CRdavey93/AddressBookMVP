@@ -25,13 +25,13 @@ namespace AddressBookSimple
 
         public List<string> ListPersons
         {
+            //get => personsList.Items.Cast<string>().ToList();
             set => personsList.DataSource = value;
         }
 
         public ListBox ListPersonsControl
         {
             get => personsList;
-            set => personsList = value;
         }
 
         //Public events
@@ -49,7 +49,7 @@ namespace AddressBookSimple
         public event EventHandler SortByName;
         public event EventHandler SortByZip;
 
-        public event EventHandler FindPerson;
+        public event EventHandler<SelectedIndexEventArgs> FindPerson;
 
         public event EventHandler SetupTests;
 
@@ -123,7 +123,8 @@ namespace AddressBookSimple
 
         private void findToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FindPerson?.Invoke(this, EventArgs.Empty);
+            int index = this.personsList.SelectedIndex;
+            FindPerson?.Invoke(this, new SelectedIndexEventArgs(index));
         }
     }
 }

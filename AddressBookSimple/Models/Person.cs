@@ -35,5 +35,17 @@ namespace AddressBookSimple.Models
         {
             return LastName + ", " + FirstName;
         }
+
+        public void updatePersonInfo(string firstName, string lastName, string address, string city,
+                                      string state, string zip, string phoneNumber)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Address = address;
+            City = city;
+            State = state;
+            Zip = zip;
+            PhoneNumber = phoneNumber;
+        }
     }
 }

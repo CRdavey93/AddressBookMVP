@@ -9,11 +9,11 @@ namespace AddressBookSimple.Models
 {
     public class AddressBook
     {
-        private static List<Person> addressBookList;
-        private static bool changesToBeSaved = false;
-        private static bool sortedByName = false;
-        private static bool sortedByZip = false;
-        private static string fileName;
+        private List<Person> addressBookList;
+        private bool changesToBeSaved = false;
+        private bool sortedByName = false;
+        private bool sortedByZip = false;
+        private string fileName;
 
         public AddressBook()
         {

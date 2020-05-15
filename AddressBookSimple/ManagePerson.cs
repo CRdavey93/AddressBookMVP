@@ -16,10 +16,10 @@ namespace AddressBookSimple
     public partial class ManagePerson : Form, IManagePerson
     {
 
-        private static bool personBeingEditedFlag = false;
-        private static Person personBeingEdited = null;
+        private bool personBeingEditedFlag = false;
+        private Person personBeingEdited = null;
 
-        //private AddressBook addressBook;
+        //Constructor used when adding a person
         public ManagePerson(AddressBook model)
         {
             InitializeComponent();
@@ -27,6 +27,7 @@ namespace AddressBookSimple
             personBeingEditedFlag = false;
         }
 
+        //Constructor used when editing a person, which populates the text boxes with person info
         public ManagePerson(AddressBook model, Person person)
         {
             InitializeComponent();
@@ -85,11 +86,6 @@ namespace AddressBookSimple
             set => textBoxZip.Text = value;
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         //Public events
         public event EventHandler<PersonEditedEventArgs> SavingPerson;
 
@@ -98,6 +94,12 @@ namespace AddressBookSimple
             SavingPerson?.Invoke(this, new PersonEditedEventArgs(personBeingEditedFlag, personBeingEdited));
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        //Method used to close this form and can be called from the presenter
         public void CloseView()
         {
             this.Close();

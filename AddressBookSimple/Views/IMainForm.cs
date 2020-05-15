@@ -12,7 +12,7 @@ namespace AddressBookSimple.Views
     public interface IMainForm
     {
         List<string> ListPersons { set; }
-        ListBox ListPersonsControl { get; set; }
+        ListBox ListPersonsControl { get; }
 
         event EventHandler AddPerson;
         event EventHandler<PersonInfoEventArgs> EditPerson;
@@ -27,7 +27,7 @@ namespace AddressBookSimple.Views
         event EventHandler SortByName;
         event EventHandler SortByZip;
 
-        event EventHandler FindPerson;
+        event EventHandler<SelectedIndexEventArgs> FindPerson;
 
         event EventHandler SetupTests;
     }
@@ -39,6 +39,16 @@ namespace AddressBookSimple.Views
             PersonName = personName;
         }
         public string PersonName { get; }
+    }
+
+    public class SelectedIndexEventArgs : EventArgs
+    {
+        public SelectedIndexEventArgs(int index)
+        {
+            Index = index;
+        }
+
+        public int Index { get; }
     }
 
 }

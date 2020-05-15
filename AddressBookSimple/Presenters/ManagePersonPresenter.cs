@@ -18,6 +18,7 @@ namespace AddressBookSimple.Presenters
         {
             _view = view;
             _addressBook = addressBook;
+
             _view.SavingPerson += SavePerson;
         }
 
@@ -55,7 +56,8 @@ namespace AddressBookSimple.Presenters
                     {
                         if(person == e.PersonBeingEdited)
                         {
-                            updatePersonInfo(person);
+                            person.updatePersonInfo(_view.InputFirstName, _view.InputLastName, _view.InputAddress,
+                                                    _view.InputCity, _view.InputState, _view.InputZip, _view.InputPhoneNumber);
                             _addressBook.sortAddressBook();
                             _addressBook.ChangesToBeSaved = true;
                             _view.CloseView();
@@ -70,18 +72,6 @@ namespace AddressBookSimple.Presenters
 
             }
         }
-
-        private void updatePersonInfo(Person person)
-        {
-            person.FirstName = _view.InputFirstName;
-            person.LastName = _view.InputLastName;
-            person.Address = _view.InputAddress;
-            person.City = _view.InputCity;
-            person.State = _view.InputState;
-            person.Zip = _view.InputZip;
-            person.PhoneNumber = _view.InputPhoneNumber;
-        }
-
 
         //Helper method to check if both required inputs are included
         private bool checkAddPerson()

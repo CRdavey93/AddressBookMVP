@@ -19,10 +19,16 @@ namespace AddressBookSimple.Presenters
         private readonly IMainForm _view;
         private readonly List<Person> _persons;
         private ManagePerson newManageWindow;
+        private FindTextForm newFindTextWindow;
         private AddressBook _addressBook;
         private static bool Continue = true;
         private static bool Dont_Continue = false;
+        private static int personIndex = 0;
 
+        /* Constructor
+         *  @param view the form that this presenter subscribes to and updates
+         *  @param addressBook the object to use for interacting with the address book
+         */
         public MainFormPresenter(IMainForm view, AddressBook addressBook)
         {
             _view = view;
@@ -47,6 +53,7 @@ namespace AddressBookSimple.Presenters
             _view.SetupTests += SetupTests;
         }
 
+        //Event fired when Add is clicked on the Main Form
         public void AddPerson(object sender, EventArgs e)
         {
             newManageWindow = new ManagePerson(_addressBook);
@@ -57,6 +64,7 @@ namespace AddressBookSimple.Presenters
             RefreshAddressBook();
         }
 
+        //Event fired when Edit is clicked on the Main Form
         public void EditPerson(object sender, PersonInfoEventArgs e)
         {
             if (_addressBook.AddressBookList.Any())
@@ -69,33 +77,47 @@ namespace AddressBookSimple.Presenters
 
                 RefreshAddressBook();
 
-                setListFocus(person);
+                personIndex = findFocusIndex(person);
+                setListFocus(personIndex);
 
             }
 
         }
 
+        //Event fired when delete is selected from the main form
         public void DeletePerson(object sender, PersonInfoEventArgs e)
         {
             if (_addressBook.AddressBookList.Any())
             {
                 (string firstName, string lastName) = cleanUpName(e.PersonName);
-                Person person = _addressBook.getPerson(firstName, lastName);
+                DialogResult dialogResult = MessageBox.Show("Are you sure you would like to delete this person?", "Delete", MessageBoxButtons.YesNoCancel);
 
-                _addressBook.AddressBookList.Remove(person);
-
-                RefreshAddressBook();
+                switch (dialogResult)
+                {
+                    case DialogResult.Cancel:
+                        break;
+                    case DialogResult.Yes:
+                        Person person = _addressBook.getPerson(firstName, lastName);
+                        personIndex = findFocusIndex(person);
+                        _addressBook.AddressBookList.Remove(person);
+                        RefreshAddressBook();
+                        setListFocus(personIndex);
+                        break;
+                    case DialogResult.No:
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
+        //Event fired when a persons name is double clicked in the main form
         public void ShowPersonInfo(object sender, PersonInfoEventArgs e)
         {
             (string firstName, string lastName) = cleanUpName(e.PersonName);
-
             Person person = _addressBook.getPerson(firstName, lastName);
 
             string personInfo = "";
-
             foreach (PropertyInfo prop in person.GetType().GetProperties())
             {
                 personInfo += prop.GetValue(person) + Environment.NewLine;
@@ -147,6 +169,7 @@ namespace AddressBookSimple.Presenters
             }
 
             setAddressBook(tempAddressBook);
+            RefreshAddressBook();
         }
 
         //Event fired when Save is selected from the file menu
@@ -195,7 +218,37 @@ namespace AddressBookSimple.Presenters
             _addressBook.ChangesToBeSaved = false;
         }
 
-        public bool offerToSave()
+        //Event fired when sort by name is selected from the sort menu
+        public void SortByName(object sender, EventArgs e)
+        {
+            _addressBook.sortByName();
+            _addressBook.SortedByName = true;
+            _addressBook.SortedByZip = false;
+
+            RefreshAddressBook();
+        }
+
+        //Event fired when sort by zip is selected from the sort menu
+        public void SortByZip(object sender, EventArgs e)
+        {
+            _addressBook.sortByZip();
+            _addressBook.SortedByZip = true;
+            _addressBook.SortedByName = false;
+
+            RefreshAddressBook();
+        }
+
+        //Event fired when Find is selected from the search menu
+        private void FindPerson(object sender, SelectedIndexEventArgs e)
+        {
+            newFindTextWindow = new FindTextForm(_addressBook, e.Index);
+
+            newFindTextWindow.ShowDialog();
+
+        }
+
+        //Method to offer the user the ability to save if unsaved changes have been made and the user is closing the current instance of the address book
+        private bool offerToSave()
         {
             DialogResult dialogResult = MessageBox.Show("Changes have recently been made, would you like to save?", "Save", MessageBoxButtons.YesNoCancel);
 
@@ -221,31 +274,10 @@ namespace AddressBookSimple.Presenters
             }
         }
 
-        private void SortByName(object sender, EventArgs e)
-        {
-            _addressBook.sortByName();
-            _addressBook.SortedByName = true;
-            _addressBook.SortedByZip = false;
-
-            RefreshAddressBook();
-        }
-
-        private void SortByZip(object sender, EventArgs e)
-        {
-            _addressBook.sortByZip();
-            _addressBook.SortedByZip = true;
-            _addressBook.SortedByName = false;
-
-            RefreshAddressBook();
-        }
-
-        private void FindPerson(object sender, EventArgs e)
-        {
-            
-        }
-
-        //Helper method for taking the string passed from the main view and ordering it correctly while removing white space to return a usable first and last name.
-        public (string firstName, string lastName) cleanUpName(string personName)
+        /*Helper method for taking the string passed from the main view and ordering it correctly while removing white space to return a usable first and last name.
+         * @param personName is the string containing the full name of the person passed from the view in the order last name, first name.
+         */
+        private static (string firstName, string lastName) cleanUpName(string personName)
         {
             string[] nameArray = personName.Split(',');
             string firstName = nameArray[1].Trim();
@@ -254,22 +286,40 @@ namespace AddressBookSimple.Presenters
             return (firstName, lastName);
         }
 
-        //Helper method to set the focus of the list on the person we want after list update.
-        public void setListFocus(Person person)
+        /*Helper method to set the focus of the list on the person we want after list update.
+         * @param index is the location in the list that we want to focus on after an operation
+         */
+        private void setListFocus(int index)
         {
             var listBox = _view.ListPersonsControl;
-
-            int index = listBox.FindStringExact(person.getFullName());
 
             if (index != -1)
                 listBox.SetSelected(index, true);
         }
+        
+        /*Find and return the index of the person we want
+         * @param person is the person object that we want to find the index of in the list
+         */
+        private int findFocusIndex(Person person)
+        {
+            var listBox = _view.ListPersonsControl;
+            int index = listBox.FindStringExact(person.getFullName());
+            int lastIndex = listBox.Items.Count - 1;
 
-        //Helper method to set the instance of addressBook we are using when opening a file
+            if (index == lastIndex)
+            {
+                index = index - 1;
+            }
+
+            return index;
+        }
+
+        /*Helper method to set the instance of addressBook we are using when opening a file
+         * @param addressBook is the instance of the address book that we want to set
+         */
         public void setAddressBook(AddressBook addressBook)
         {
             _addressBook = addressBook;
-            RefreshAddressBook();
         }
 
         //Method to update the list of names shown on the main form
@@ -287,6 +337,7 @@ namespace AddressBookSimple.Presenters
             _view.ListPersons = personNames;
         }
 
+        //Event fired to setup the testing data
         public void SetupTests(object sender, EventArgs e)
         {
             _addressBook.setupTests();

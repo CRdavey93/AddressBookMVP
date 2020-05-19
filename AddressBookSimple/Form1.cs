@@ -26,7 +26,6 @@ namespace AddressBookSimple
 
         public List<string> ListPersons
         {
-            //get => personsList.Items.Cast<string>().ToList();
             set => personsList.DataSource = value;
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AddressBookSimple.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,8 @@ namespace AddressBookSimple.Views
     public interface IFindText
     {
         string InputFindText { get; set; }
+
+        bool ViewClosed { get; set; }
 
         event EventHandler<SelectedIndexEventArgs> FindingText;
 

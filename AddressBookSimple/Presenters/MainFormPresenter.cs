@@ -18,12 +18,12 @@ namespace AddressBookSimple.Presenters
     {
         private readonly IMainForm _view;
         private readonly List<Person> _persons;
-        private ManagePerson newManageWindow;
-        private FindTextForm newFindTextWindow;
-        private AddressBook _addressBook;
         private static bool Continue = true;
         private static bool Dont_Continue = false;
         private static int personIndex = 0;
+        private ManagePerson newManageWindow;
+        private FindTextForm newFindTextWindow;
+        private AddressBook _addressBook;
 
         /* Constructor
          *  @param view the form that this presenter subscribes to and updates
@@ -49,6 +49,7 @@ namespace AddressBookSimple.Presenters
             _view.SortByZip += SortByZip;
 
             _view.FindPerson += FindPerson;
+            _view.FindPersonAgain += FindPersonAgain;
 
             _view.SetupTests += SetupTests;
         }
@@ -98,7 +99,7 @@ namespace AddressBookSimple.Presenters
                         break;
                     case DialogResult.Yes:
                         Person person = _addressBook.getPerson(firstName, lastName);
-                        personIndex = findFocusIndex(person);
+                        personIndex = findDeleteFocusIndex(person);
                         _addressBook.AddressBookList.Remove(person);
                         RefreshAddressBook();
                         setListFocus(personIndex);
@@ -245,6 +246,48 @@ namespace AddressBookSimple.Presenters
 
             newFindTextWindow.ShowDialog();
 
+            if (!newFindTextWindow.ViewClosed)
+            {
+                if (_addressBook.PersonToFind != null)
+                {
+                    int index = findFocusIndex(_addressBook.PersonToFind);
+                    setListFocus(index);
+
+                    _addressBook.PersonToFind = null;
+
+                    _view.EnableFindAgainButton();
+                }
+                else
+                {
+                    MessageBox.Show("No person could be found with information including that text");
+                    _view.DisableFindAgainButton();
+                }
+            }
+        }
+
+        //Event fired when Find Again is selected from the search menu
+        private void FindPersonAgain(object sender, SelectedIndexEventArgs e)
+        {
+            int index = e.Index;
+            string textToFind = _addressBook.FoundText;
+
+            _addressBook.searchForText(textToFind, index);
+
+            if (_addressBook.PersonToFind != null)
+            {
+                int newIndex = findFocusIndex(_addressBook.PersonToFind);
+                setListFocus(newIndex);
+
+                _addressBook.PersonToFind = null;
+
+                _view.EnableFindAgainButton();
+            }
+            else
+            {
+                MessageBox.Show("No person could be found with information including that text");
+                _view.DisableFindAgainButton();
+            }
+
         }
 
         //Method to offer the user the ability to save if unsaved changes have been made and the user is closing the current instance of the address book
@@ -301,6 +344,18 @@ namespace AddressBookSimple.Presenters
          * @param person is the person object that we want to find the index of in the list
          */
         private int findFocusIndex(Person person)
+        {
+            var listBox = _view.ListPersonsControl;
+            int index = listBox.FindStringExact(person.getFullName());
+
+            return index;
+        }
+
+        /*Find and return the index of the person we want. A separate method to deal with the delete event specifically,
+         * accounting for the possibility of the person we want to delete being the last person in list making the focus index - 1.
+        * @param person is the person object that we want to find the index of in the list
+        */
+        private int findDeleteFocusIndex(Person person)
         {
             var listBox = _view.ListPersonsControl;
             int index = listBox.FindStringExact(person.getFullName());

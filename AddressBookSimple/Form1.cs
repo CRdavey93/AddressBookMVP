@@ -21,6 +21,7 @@ namespace AddressBookSimple
         {
             InitializeComponent();
             var mainFormPresenter = new MainFormPresenter(this, new AddressBook());
+            findAgainToolStripMenuItem.Enabled = false;
         }
 
         public List<string> ListPersons
@@ -50,6 +51,7 @@ namespace AddressBookSimple
         public event EventHandler SortByZip;
 
         public event EventHandler<SelectedIndexEventArgs> FindPerson;
+        public event EventHandler<SelectedIndexEventArgs> FindPersonAgain;
 
         public event EventHandler SetupTests;
 
@@ -125,6 +127,22 @@ namespace AddressBookSimple
         {
             int index = this.personsList.SelectedIndex;
             FindPerson?.Invoke(this, new SelectedIndexEventArgs(index));
+        }
+
+        private void findAgainToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int index = this.personsList.SelectedIndex;
+            FindPersonAgain?.Invoke(this, new SelectedIndexEventArgs(index));
+        }
+
+        public void EnableFindAgainButton()
+        {
+            findAgainToolStripMenuItem.Enabled = true;
+        }
+
+        public void DisableFindAgainButton()
+        {
+            findAgainToolStripMenuItem.Enabled = false;
         }
     }
 }

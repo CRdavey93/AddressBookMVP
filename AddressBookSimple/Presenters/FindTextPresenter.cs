@@ -20,10 +20,13 @@ namespace AddressBookSimple.Presenters
             _view.FindingText += FindText;
         }
 
-        public void FindText(object sender, EventArgs e)
+        public void FindText(object sender, SelectedIndexEventArgs e)
         {
+            int startSearchIndex = e.Index;
             string textToFind = _view.InputFindText;
 
+            _addressBook.searchForText(textToFind, startSearchIndex);
+            _view.CloseView();
         }
     }
 }

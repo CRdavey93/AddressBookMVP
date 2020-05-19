@@ -15,12 +15,14 @@ namespace AddressBookSimple
 {
     public partial class FindTextForm : Form, IFindText
     {
-        private int beginSearchIndex;
+        private int startSearchIndex;
+        private bool viewClosed;
         public FindTextForm(AddressBook model, int index)
         {
             InitializeComponent();
             var findTextPresenter = new FindTextPresenter(this, model);
-            beginSearchIndex = index;
+            startSearchIndex = index;
+            viewClosed = false;
         }
 
         public string InputFindText
@@ -29,16 +31,23 @@ namespace AddressBookSimple
             set => textBoxFindText.Text = value;
         }
 
+        public bool ViewClosed
+        {
+            get => viewClosed;
+            set => viewClosed = value;
+        }
+
         //Public Events
         public event EventHandler<SelectedIndexEventArgs> FindingText;
 
         private void okButton_Click(object sender, EventArgs e)
         {
-            FindingText?.Invoke(this, new SelectedIndexEventArgs(beginSearchIndex));
+            FindingText?.Invoke(this, new SelectedIndexEventArgs(startSearchIndex));
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
         {
+            viewClosed = true;
             this.Close();
         }
 

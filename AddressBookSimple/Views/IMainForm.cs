@@ -14,6 +14,9 @@ namespace AddressBookSimple.Views
         List<string> ListPersons { set; }
         ListBox ListPersonsControl { get; }
 
+        void EnableFindAgainButton();
+        void DisableFindAgainButton();
+
         event EventHandler AddPerson;
         event EventHandler<PersonInfoEventArgs> EditPerson;
         event EventHandler<PersonInfoEventArgs> DeletePerson;
@@ -28,6 +31,7 @@ namespace AddressBookSimple.Views
         event EventHandler SortByZip;
 
         event EventHandler<SelectedIndexEventArgs> FindPerson;
+        event EventHandler<SelectedIndexEventArgs> FindPersonAgain;
 
         event EventHandler SetupTests;
     }

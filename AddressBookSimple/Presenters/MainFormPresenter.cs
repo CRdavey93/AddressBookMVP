@@ -18,8 +18,8 @@ namespace AddressBookSimple.Presenters
     {
         private readonly IMainForm _view;
         private readonly List<Person> _persons;
-        private static bool Continue = true;
-        private static bool Dont_Continue = false;
+        private const bool Continue = true;
+        private const bool Dont_Continue = false;
         private static int personIndex = 0;
         private ManagePerson newManageWindow;
         private FindTextForm newFindTextWindow;

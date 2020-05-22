@@ -17,6 +17,7 @@ namespace AddressBookSimple
     {
 
         private bool personBeingEditedFlag = false;
+        private bool canceled;
         private Person personBeingEdited = null;
 
         //Constructor used when adding a person
@@ -25,6 +26,7 @@ namespace AddressBookSimple
             InitializeComponent();
             var managePersonPresenter = new ManagePersonPresenter(this, model);
             personBeingEditedFlag = false;
+            canceled = false;
         }
 
         //Constructor used when editing a person, which populates the text boxes with person info
@@ -86,6 +88,12 @@ namespace AddressBookSimple
             set => textBoxZip.Text = value;
         }
 
+        public bool Canceled
+        {
+            get => canceled;
+            set => canceled = value;
+        }
+
         //Public events
         public event EventHandler<PersonEditedEventArgs> SavingPerson;
 
@@ -96,6 +104,7 @@ namespace AddressBookSimple
 
         private void button2_Click(object sender, EventArgs e)
         {
+            canceled = true;
             this.Close();
         }
 

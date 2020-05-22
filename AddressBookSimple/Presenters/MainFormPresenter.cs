@@ -57,12 +57,17 @@ namespace AddressBookSimple.Presenters
         //Event fired when Add is clicked on the Main Form
         public void AddPerson(object sender, EventArgs e)
         {
-            newManageWindow = new ManagePerson(_addressBook);
+            using (newManageWindow = new ManagePerson(_addressBook))
+            {
 
-            newManageWindow.ShowDialog();
+                newManageWindow.ShowDialog();
 
-            //If not canceled and FindAgainButtonEnabled do _view.DisableFindAgainButton();
-            RefreshAddressBook();
+                if (!newManageWindow.Canceled)
+                {
+                    _view.DisableFindAgainButton();
+                    RefreshAddressBook();
+                }
+            }
         }
 
         //Event fired when Edit is clicked on the Main Form
@@ -73,14 +78,19 @@ namespace AddressBookSimple.Presenters
                 (string firstName, string lastName) = cleanUpName(e.PersonName);
                 Person person = _addressBook.getPerson(firstName, lastName);
 
-                newManageWindow = new ManagePerson(_addressBook, person);
-                newManageWindow.ShowDialog();
+                using (newManageWindow = new ManagePerson(_addressBook, person))
+                {
+                    newManageWindow.ShowDialog();
 
-                //If not canceled and FindAgainButtonEnabled do _view.DisableFindAgainButton();
-                RefreshAddressBook();
+                    if (!newManageWindow.Canceled)
+                    {
+                        _view.DisableFindAgainButton();
+                        RefreshAddressBook();
+                    }
 
-                personIndex = findFocusIndex(person);
-                setListFocus(personIndex);
+                    personIndex = findFocusIndex(person);
+                    setListFocus(personIndex);
+                }
 
             }
 
@@ -102,7 +112,7 @@ namespace AddressBookSimple.Presenters
                         Person person = _addressBook.getPerson(firstName, lastName);
                         personIndex = findDeleteFocusIndex(person);
                         _addressBook.AddressBookList.Remove(person);
-                        //If not canceled and FindAgainButtonEnabled do _view.DisableFindAgainButton();
+                        _view.DisableFindAgainButton();
                         RefreshAddressBook();
                         setListFocus(personIndex);
                         break;
@@ -138,6 +148,7 @@ namespace AddressBookSimple.Presenters
                     return;
             }
             _addressBook = new AddressBook();
+            _view.DisableFindAgainButton();
             RefreshAddressBook();
         }
 
@@ -172,6 +183,7 @@ namespace AddressBookSimple.Presenters
             }
 
             setAddressBook(tempAddressBook);
+            _view.DisableFindAgainButton();
             RefreshAddressBook();
         }
 

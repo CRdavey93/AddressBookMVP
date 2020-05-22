@@ -16,6 +16,7 @@ namespace AddressBookSimple.Views
         string InputCity { get; set; }
         string InputState { get; set; }
         string InputZip { get; set; }
+        bool Canceled { get; set; }
 
         void CloseView();
 
